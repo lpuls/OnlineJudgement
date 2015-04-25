@@ -1,0 +1,17 @@
+#! /bin/bash
+read code
+codepath="/home/xp/"$code
+read exe
+exepath="/home/xp/codes/"$exe
+read a
+echo $codepath $exepath
+if [ "$a" = "cpp" ]
+then sudo g++ $codepath -o $exepath
+elif [ "$a" = "c" ]
+then sudo gcc $codepath -o $exepath
+elif [ "$a" = "java" ]
+then 
+sudo javac $codepath 
+sudo cp "/home/xp/"$code $exepath
+fi
+echo "success"
