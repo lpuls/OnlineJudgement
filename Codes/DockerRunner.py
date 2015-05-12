@@ -27,16 +27,17 @@ class DockerRunner:
         @:param shell: 要让docker执行的sh文件所在
         @:return:执行shell后得到的结果
         """
-        r = None
+        k = None
         if DockerRunner.__dockerLinker == None:
             DockerRunner.linkDocker()
         #create a container and run it
         try:
-            s = DockerRunner.__dockerLinker.create_container(image='xp_oj_compile:v2', volumes=[DATA.DOCKER_SHELL_PATH,DATA.DOCKER_CODES_PATH, DATA.DOCKER_EXES_PATH], stdin_open=True, tty=False)
+            s = DockerRunner.__dockerLinker.create_container(image='xpsama/xp_oj_compile:v1.0',  command=['/bin/bash'], volumes=[DATA.DOCKER_SHELL_PATH,DATA.DOCKER_CODES_PATH, DATA.DOCKER_EXES_PATH], stdin_open=True, tty=False)
             DockerRunner.__dockerLinker.start(container=s['Id'],binds={DATA.HOST_SHELL_PATH:{'bind':DATA.DOCKER_SHELL_PATH,'ro': False},
                                                                        DATA.HOST_CODES_PATH:{'bind':DATA.DOCKER_CODES_PATH,'ro':False},
                                                                        DATA.HOST_EXES_PATH:{'bind':DATA.DOCKER_EXES_PATH,'ro':False}})
-            r = DockerRunner.__dockerLinker.execute(container=s['Id'], cmd=['.'+ DATA.DOCKER_SHELL_PATH + '/' + shell], stdout=True, stderr=True, stream=False, tty=False)
+            r = DockerRunner.__dockerLinker.exec_create(container=s['Id'], cmd=['.'+ DATA.DOCKER_SHELL_PATH + '/' + shell], stdout=True, stderr=True, tty=False)
+            k = DockerRunner.__dockerLinker.exec_start(r['Id'])
             DockerRunner.__dockerLinker.stop(container=s['Id'])
             DockerRunner.__dockerLinker.remove_container(container=s['Id'])
         except Exception,e:
@@ -44,7 +45,7 @@ class DockerRunner:
             print e
             pass
         finally:
-            return r
+            return k
 
     @staticmethod
     def runProgram(shell):
@@ -58,11 +59,12 @@ class DockerRunner:
             DockerRunner.linkDocker()
         #create a container and run it
         try:
-            s = DockerRunner.__dockerLinker.create_container(image='xp_oj_compile:v2', volumes=[DATA.DOCKER_SHELL_PATH,DATA.DOCKER_EXES_PATH], stdin_open=True, tty=False)
+            s = DockerRunner.__dockerLinker.create_container(image='xpsama/xp_oj_compile:v1.0', command=['/bin/bash'], volumes=[DATA.DOCKER_SHELL_PATH,DATA.DOCKER_EXES_PATH], stdin_open=True, tty=False)
             DockerRunner.__dockerLinker.start(container=s['Id'],binds={DATA.HOST_SHELL_PATH:{'bind':DATA.DOCKER_SHELL_PATH,'ro': False},
                                                                        DATA.HOST_EXES_PATH:{'bind':DATA.DOCKER_EXES_PATH,'ro':False}})
-            k = DockerRunner.__dockerLinker.execute(container=s['Id'], cmd=['.'+ DATA.DOCKER_SHELL_PATH + '/' + shell], stdout=True, stderr=True, stream=False, tty=False)
-            DockerRunner.__dockerLinker.logs(container=s['Id'])
+            execId = DockerRunner.__dockerLinker.exec_create(container=s['Id'], cmd=['.'+ DATA.DOCKER_SHELL_PATH + '/' + shell], stdout=True, stderr=True, tty=False)
+            k = DockerRunner.__dockerLinker.exec_start(execId['Id'])
+            #DockerRunner.__dockerLinker.logs(container=s['Id'])
             DockerRunner.__dockerLinker.stop(container=s['Id'])
             DockerRunner.__dockerLinker.remove_container(container=s['Id'])
         except Exception,e:

@@ -2,11 +2,13 @@
 #/usr/bin/env python
 __author__ = 'xp'
 
+import datetime
 from OJRunner import OJRunner
 from DataBase import DataBaseLinker
 
 if __name__ == '__main__':
     #OJRunner.produce()
+    #print datetime.datetime(2015,04,18,03,42,36)2015-04-18 03:42:36
     OJRunner.running()
     #print DataBaseLinker.getInstance().execute("select * from Submit")
     #OJRunner.compile('myCode','myCode','cpp')

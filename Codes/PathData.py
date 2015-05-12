@@ -9,3 +9,6 @@ class DATA:
     DOCKER_CODES_PATH = '/home/codes'
     DOCKER_EXES_PATH = '/home/exes'
     DOCKER_SHELL_PATH = '/home/shellFiles'
+
+    JUDGEMENT_TIMES = 5
+    THREAD_TOTAL = 10

@@ -50,7 +50,8 @@ class DataBaseLinker:
             cur = DataBaseLinker.__connect.cursor(cursorclass=MySQLdb.cursors.DictCursor)
             cur.execute(sql)
             result = cur.fetchall()
-            cur.close
+            DataBaseLinker.__connect.commit()
+            cur.close()
         except Exception, e:
             print e
         finally:
