@@ -11,4 +11,6 @@ class DATA:
     DOCKER_SHELL_PATH = '/home/shellFiles'
 
     JUDGEMENT_TIMES = 5
-    THREAD_TOTAL = 10
+    THREAD_TOTAL = 1
+
+    DOCKER_IMAGE_NAME = 'xpsama/xp_oj_compile:v1.2'

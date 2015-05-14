@@ -32,7 +32,7 @@ class DockerRunner:
             DockerRunner.linkDocker()
         #create a container and run it
         try:
-            s = DockerRunner.__dockerLinker.create_container(image='xpsama/xp_oj_compile:v1.0',  command=['/bin/bash'], volumes=[DATA.DOCKER_SHELL_PATH,DATA.DOCKER_CODES_PATH, DATA.DOCKER_EXES_PATH], stdin_open=True, tty=False)
+            s = DockerRunner.__dockerLinker.create_container(image=DATA.DOCKER_IMAGE_NAME,  command=['/bin/bash'], volumes=[DATA.DOCKER_SHELL_PATH,DATA.DOCKER_CODES_PATH, DATA.DOCKER_EXES_PATH], stdin_open=True, tty=False)
             DockerRunner.__dockerLinker.start(container=s['Id'],binds={DATA.HOST_SHELL_PATH:{'bind':DATA.DOCKER_SHELL_PATH,'ro': False},
                                                                        DATA.HOST_CODES_PATH:{'bind':DATA.DOCKER_CODES_PATH,'ro':False},
                                                                        DATA.HOST_EXES_PATH:{'bind':DATA.DOCKER_EXES_PATH,'ro':False}})
@@ -59,7 +59,7 @@ class DockerRunner:
             DockerRunner.linkDocker()
         #create a container and run it
         try:
-            s = DockerRunner.__dockerLinker.create_container(image='xpsama/xp_oj_compile:v1.0', command=['/bin/bash'], volumes=[DATA.DOCKER_SHELL_PATH,DATA.DOCKER_EXES_PATH], stdin_open=True, tty=False)
+            s = DockerRunner.__dockerLinker.create_container(image=DATA.DOCKER_IMAGE_NAME, command=['/bin/bash'], volumes=[DATA.DOCKER_SHELL_PATH,DATA.DOCKER_EXES_PATH], stdin_open=True, tty=False)
             DockerRunner.__dockerLinker.start(container=s['Id'],binds={DATA.HOST_SHELL_PATH:{'bind':DATA.DOCKER_SHELL_PATH,'ro': False},
                                                                        DATA.HOST_EXES_PATH:{'bind':DATA.DOCKER_EXES_PATH,'ro':False}})
             execId = DockerRunner.__dockerLinker.exec_create(container=s['Id'], cmd=['.'+ DATA.DOCKER_SHELL_PATH + '/' + shell], stdout=True, stderr=True, tty=False)

@@ -9,9 +9,11 @@ import random
 import DataBase
 import datetime
 import threading
+from Log import Log
 from subprocess import *
 from PathData import DATA
 from DockerRunner import DockerRunner
+from OJDataBaseAdministrator import OJDataBaseAdministrator as OJDBA
 
 class OJRunner:
     """
@@ -79,14 +81,20 @@ class OJRunner:
         """
         #当shell语句成功实现才返回真，否则返回值，不进以后续操作
         fileName = 'compile_' + codeName + '_' + exeName + '_' + compileType + '.sh'
-        print fileName
+        Log.LOG("------------------------------------------")
+        Log.LOG("file Name : " + fileName)
+        Log.LOG("------------------------------------------")
         if not OJRunner.__createCompileShellFile(codeName,exeName,compileType):
             Popen('rm ' + DATA.HOST_SHELL_PATH + '/' + fileName,shell=True, stdin=PIPE,stdout=PIPE, close_fds=True)
             return False
         result = DockerRunner.runCompile(fileName)
-        print 'Create Exe'
+        Log.LOG("------------------------------------------")
+        Log.LOG('Create Exe')
+        Log.LOG("------------------------------------------")
         Popen('rm ' + DATA.HOST_SHELL_PATH + '/' + fileName,shell=True, stdin=PIPE,stdout=PIPE, close_fds=True)
-        print result
+        Log.LOG("------------------------------------------")
+        Log.LOG(result)
+        Log.LOG("------------------------------------------")
         if len(result) != 2:
             return False
         return True
@@ -102,6 +110,7 @@ class OJRunner:
 
         #选择编译器类型，若是python则要将代码从代码文件夹移动至可执行文件夹，若是JAVA则要在编译后，从代码文件夹剪切。CLASS文件到可移行文件夹
         #文件名由comepile_codeName_exeName_compileType.sh,其中，codeName中包括了用户ID，题目编号和日期，保证不重复
+        Log.LOG("CODE NAME : " + codeName + " EXE NAME : " + exeName + " COMPILE TYPE : " + compileType)
         compileName = ''
         if compileType == 'c':
             compileName = 'gcc ' + DATA.DOCKER_CODES_PATH + '/' + codeName  + '.c -o ' + DATA.DOCKER_EXES_PATH + '/' + exeName
@@ -112,9 +121,11 @@ class OJRunner:
             compileName += 'mv ' + DATA.DOCKER_CODES_PATH + '/' + exeName + '.class ' + DATA.DOCKER_EXES_PATH
         elif compileType == 'python':
             compileName = 'cp ' + DATA.DOCKER_CODES_PATH + '/' + codeName + '.py ' + DATA.DOCKER_EXES_PATH
+        Log.LOG("COMPILE NAME : " + str(compileName))
         #生成编译的sh文件
         try:
             fileName = 'compile_' + codeName + '_' + exeName + '_' + compileType + '.sh'
+            Log.LOG("FILE NAME IN CREATE COMPILE SHELL : " + str(fileName))
             p = Popen('touch ' + DATA.HOST_SHELL_PATH + '/' + fileName,shell=True, stdin=PIPE,stdout=PIPE, close_fds=True)
             file = open(DATA.HOST_SHELL_PATH + '/' + fileName,"w")
             file.write('#! /bin/bash\n')
@@ -214,12 +225,14 @@ class OJRunner:
     def produce():
         #每10秒钟往数据库中取出待评测项一次
         while True:
-            OJRunner.mutex = False
-            data = DataBase.DataBaseLinker.getInstance().execute("select * from Submit where result='Waiting'")
-            for item in data:
-                OJRunner.queue.append(item)
-            OJRunner.mutex = True
+            if OJRunner.mutex:
+                OJRunner.mutex = False
+                data = DataBase.DataBaseLinker.getInstance().execute("select * from Submit where result='Waiting'")
+                for item in data:
+                    OJRunner.queue.append(item)
+                OJRunner.mutex = True
             time.sleep(10)
+            print OJRunner.queue
 
     @staticmethod
     def waitingDataBase():
@@ -245,6 +258,8 @@ class OJRunner:
                 #取取队列头，并清掉它
                 code = OJRunner.queue[0]
                 OJRunner.queue.remove(code)
+                Log.LOG("The QUEUE : " + str(OJRunner.queue))
+                OJDBA.updataRunning(code['codeName'])
                 #允许它人访问，将信号量置为True
                 OJRunner.customerMuxter = True
                 if code['type']=='cpp':
@@ -271,6 +286,7 @@ class OJRunner:
                 acceptSuccess = True#用来标识是否成功AC
                 dictLength = len(data)
                 while i < DATA.JUDGEMENT_TIMES:
+                    Log.LOG("Run No." + str(i) + " Time : ")
                     target = {}
                     position = random.randint(0,dictLength-1)
                     #将结果以JSON的格式进行解析
@@ -279,7 +295,12 @@ class OJRunner:
                     target['answer'] = targetResult
                     result = OJRunner.runContainer(code['codeName'], compileType, testData)
                     OJResult = OJRunner.analysisResult(result, target)
-                    print OJResult
+                    Log.LOG("-------------------------------------------------")
+                    Log.LOG("Test Data : " + str(testData) )
+                    Log.LOG("Program run result : " + result )
+                    Log.LOG("Test run result : " + str(target) )
+                    Log.LOG(OJResult )
+                    Log.LOG("-------------------------------------------------")
                     #检测结果是否为AC，若不是则写入数据库跳出，执行下一份代码，若是则继续评测
                     if OJResult != 'Accepted':
                         acceptSuccess = False#AC失败，将标识设为False

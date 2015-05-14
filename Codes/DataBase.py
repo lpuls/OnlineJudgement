@@ -2,6 +2,7 @@
 __author__ = 'xp'
 
 import MySQLdb
+from Question import Question
 
 class DataBaseLinker:
     __connect = None
@@ -66,7 +67,13 @@ class DataBaseLinker:
             DataBaseLinker.__dataBaseLinker = DataBaseLinker()
         return DataBaseLinker.__dataBaseLinker
 
+
 if __name__ == "__main__":
-    data = DataBaseLinker.getInstance().execute("select * from Users")
-    print data[0]
-    DataBaseLinker.getInstance().closeLink()
+    pass
+    #DataBaseLinker.getInstance().updataRunning('xp_0000_20150606122323_cpp')
+    #data = DataBaseLinker.getInstance().getQuestionById('0000')
+    #print data.getTime()
+    #print data.getRam()
+    #print data.getId()
+    #print data.getContext()
+    #print data.getName()

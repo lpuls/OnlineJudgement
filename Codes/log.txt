@@ -1,0 +1,7 @@
+{
+'user_id': 'xp',
+'result':'waiting',
+'submit_time': datetime.timedelta(0, 44603),
+'codeName': 'xp_0000_20150606122323_cpp',
+'type': 'cpp',
+'question_id': '0000'}
