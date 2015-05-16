@@ -26,6 +26,14 @@ class OJDataBaseAdministrator:
             submits.append(submit)
         return  submits
 
+    @staticmethod
+    def updateCompilerError(codeName):
+        return OJDataBaseAdministrator.dbLinker.execute("update Submit set result='compilation error' where codeName='" + codeName + "'")
+
+    @staticmethod
+    def updateOtherResult(result, codeName):
+        return OJDataBaseAdministrator.dbLinker.execute("update Submit set result='" + result + "' where codeName='" + codeName + "'")
+
 if __name__ == '__main__':
     result = OJDataBaseAdministrator.getSubmitsWhichWating()
     data = result[0].getResult()

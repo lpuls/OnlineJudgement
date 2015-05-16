@@ -12,7 +12,7 @@ class Question:
         :param name:
         :return:
         """
-        self.__time = float(time)
+        self.__time = int(time)
         self.__ram = int(ram)
         self.__id = id
         self.__context = context
@@ -20,7 +20,7 @@ class Question:
     def getTime(self):
         return self.__time
     def getRam(self):
-        return self.__time
+        return self.__ram
     def getId(self):
         return self.__id
     def getContext(self):

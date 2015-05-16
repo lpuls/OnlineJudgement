@@ -69,7 +69,8 @@ class DataBaseLinker:
 
 
 if __name__ == "__main__":
-    pass
+    a = ('a',)
+    print type(a)
     #DataBaseLinker.getInstance().updataRunning('xp_0000_20150606122323_cpp')
     #data = DataBaseLinker.getInstance().getQuestionById('0000')
     #print data.getTime()

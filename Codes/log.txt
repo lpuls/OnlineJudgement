@@ -1,7 +1,187 @@
-{
-'user_id': 'xp',
-'result':'waiting',
-'submit_time': datetime.timedelta(0, 44603),
-'codeName': 'xp_0000_20150606122323_cpp',
-'type': 'cpp',
-'question_id': '0000'}
+Thread.0 is sleeping......
+
+QUEUE : [<Submit.Submit instance at 0x7f26399d9b90>, <Submit.Submit instance at 0x7f26399d9ea8>, <Submit.Submit instance at 0x7f26399d9d88>, <Submit.Submit instance at 0x7f26399d9e60>]
+The QUEUE LENGTH : 4
+The QUEUE : [<Submit.Submit instance at 0x7f26399d9ea8>, <Submit.Submit instance at 0x7f26399d9d88>, <Submit.Submit instance at 0x7f26399d9e60>]
+The QUEUE LENGTH : 3
+------------------------------------------
+file Name : compile_xp_0000_20150606122323_cpp_xp_0000_20150606122323_cpp_cpp.sh
+------------------------------------------
+CODE NAME : xp_0000_20150606122323_cpp EXE NAME : xp_0000_20150606122323_cpp COMPILE TYPE : cpp
+COMPILE NAME : g++ /home/codes/xp_0000_20150606122323_cpp.cpp -o /home/exes/xp_0000_20150606122323_cpp
+FILE NAME IN CREATE COMPILE SHELL : compile_xp_0000_20150606122323_cpp_xp_0000_20150606122323_cpp_cpp.sh
+QUEUE : [<Submit.Submit instance at 0x7f26399d9ea8>, <Submit.Submit instance at 0x7f26399d9d88>, <Submit.Submit instance at 0x7f26399d9e60>]
+------------------------------------------
+Create Exe
+------------------------------------------
+------------------------------------------
+0
+
+------------------------------------------
+Run No.0 Time : 
+QUEUE : [<Submit.Submit instance at 0x7f26399d9ea8>, <Submit.Submit instance at 0x7f26399d9d88>, <Submit.Submit instance at 0x7f26399d9e60>]
+stack size              (kbytes, -s) 8192
+0
+
+real	0m0.002s
+user	0m0.000s
+sys	0m0.003s
+
+Result Analysis : stack size              (kbytes, -s) 8192
+0
+
+real	0m0.002s
+user	0m0.000s
+sys	0m0.003s
+
+Result Type : <type 'str'>
+-------------------------------------------------
+Program run result : stack size              (kbytes, -s) 8192
+0
+
+real	0m0.002s
+user	0m0.000s
+sys	0m0.003s
+
+Test run result : {'answer': [0]}
+Analysis Result : Output Limit Exceeded
+-------------------------------------------------
+The QUEUE LENGTH : 3
+The QUEUE : [<Submit.Submit instance at 0x7f26399d9d88>, <Submit.Submit instance at 0x7f26399d9e60>]
+The QUEUE LENGTH : 2
+------------------------------------------
+file Name : compile_xp_0000_20150515222400_cpp_xp_0000_20150515222400_cpp_cpp.sh
+------------------------------------------
+CODE NAME : xp_0000_20150515222400_cpp EXE NAME : xp_0000_20150515222400_cpp COMPILE TYPE : cpp
+COMPILE NAME : g++ /home/codes/xp_0000_20150515222400_cpp.cpp -o /home/exes/xp_0000_20150515222400_cpp
+FILE NAME IN CREATE COMPILE SHELL : compile_xp_0000_20150515222400_cpp_xp_0000_20150515222400_cpp_cpp.sh
+QUEUE : [<Submit.Submit instance at 0x7f26399d9d88>, <Submit.Submit instance at 0x7f26399d9e60>]
+------------------------------------------
+Create Exe
+------------------------------------------
+------------------------------------------
+0
+
+------------------------------------------
+Run No.0 Time : 
+QUEUE : [<Submit.Submit instance at 0x7f26399d9d88>, <Submit.Submit instance at 0x7f26399d9e60>]
+stack size              (kbytes, -s) 8192
+./home/shellFiles/run_xp_0000_20150515222400_cpp_cpp.sh: line 3:    12 Done                    echo -65530 1
+        13 Killed                  | ./home/exes/xp_0000_20150515222400_cpp
+
+real	0m1.001s
+user	0m1.001s
+sys	0m0.001s
+
+Result Analysis : stack size              (kbytes, -s) 8192
+./home/shellFiles/run_xp_0000_20150515222400_cpp_cpp.sh: line 3:    12 Done                    echo -65530 1
+        13 Killed                  | ./home/exes/xp_0000_20150515222400_cpp
+
+real	0m1.001s
+user	0m1.001s
+sys	0m0.001s
+
+Result Type : <type 'str'>
+-------------------------------------------------
+Program run result : stack size              (kbytes, -s) 8192
+./home/shellFiles/run_xp_0000_20150515222400_cpp_cpp.sh: line 3:    12 Done                    echo -65530 1
+        13 Killed                  | ./home/exes/xp_0000_20150515222400_cpp
+
+real	0m1.001s
+user	0m1.001s
+sys	0m0.001s
+
+Test run result : {'answer': [-65529]}
+Analysis Result : Time Limit Exceeded
+-------------------------------------------------
+The QUEUE LENGTH : 2
+The QUEUE : [<Submit.Submit instance at 0x7f26399d9e60>]
+The QUEUE LENGTH : 1
+------------------------------------------
+file Name : compile_xp_0000_20150606122324_cpp_xp_0000_20150606122324_cpp_cpp.sh
+------------------------------------------
+CODE NAME : xp_0000_20150606122324_cpp EXE NAME : xp_0000_20150606122324_cpp COMPILE TYPE : cpp
+COMPILE NAME : g++ /home/codes/xp_0000_20150606122324_cpp.cpp -o /home/exes/xp_0000_20150606122324_cpp
+FILE NAME IN CREATE COMPILE SHELL : compile_xp_0000_20150606122324_cpp_xp_0000_20150606122324_cpp_cpp.sh
+QUEUE : [<Submit.Submit instance at 0x7f26399d9e60>]
+------------------------------------------
+Create Exe
+------------------------------------------
+------------------------------------------
+g++: error: /home/codes/xp_0000_20150606122324_cpp.cpp: No such file or directory
+g++: fatal error: no input files
+compilation terminated.
+4
+
+------------------------------------------
+The QUEUE LENGTH : 1
+The QUEUE : []
+The QUEUE LENGTH : 0
+------------------------------------------
+file Name : compile_xp_0000_20150606122325_cpp_xp_0000_20150606122325_cpp_cpp.sh
+------------------------------------------
+CODE NAME : xp_0000_20150606122325_cpp EXE NAME : xp_0000_20150606122325_cpp COMPILE TYPE : cpp
+COMPILE NAME : g++ /home/codes/xp_0000_20150606122325_cpp.cpp -o /home/exes/xp_0000_20150606122325_cpp
+FILE NAME IN CREATE COMPILE SHELL : compile_xp_0000_20150606122325_cpp_xp_0000_20150606122325_cpp_cpp.sh
+QUEUE : []
+------------------------------------------
+Create Exe
+------------------------------------------
+------------------------------------------
+0
+
+------------------------------------------
+Run No.0 Time : 
+QUEUE : []
+stack size              (kbytes, -s) 8192
+65532
+
+real	0m0.002s
+user	0m0.000s
+sys	0m0.003s
+
+Result Analysis : stack size              (kbytes, -s) 8192
+65532
+
+real	0m0.002s
+user	0m0.000s
+sys	0m0.003s
+
+Result Type : <type 'str'>
+-------------------------------------------------
+Program run result : stack size              (kbytes, -s) 8192
+65532
+
+real	0m0.002s
+user	0m0.000s
+sys	0m0.003s
+
+Test run result : {'answer': [65531]}
+Analysis Result : Wrong Answer
+-------------------------------------------------
+Thread.0 is sleeping......
+QUEUE : []
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+QUEUE : []
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+QUEUE : []
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+QUEUE : []
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+Thread.0 is sleeping......
+QUEUE : []
+Thread.0 is sleeping......
+已杀死
+xp@ubuntu:~/OnlineJudgement/Codes$ Thread.0 is sleeping......
+clear

@@ -81,20 +81,20 @@ class OJRunner:
         """
         #当shell语句成功实现才返回真，否则返回值，不进以后续操作
         fileName = 'compile_' + codeName + '_' + exeName + '_' + compileType + '.sh'
-        Log.LOG("------------------------------------------")
-        Log.LOG("file Name : " + fileName)
-        Log.LOG("------------------------------------------")
+        Log.CompileLog("------------------------------------------")
+        Log.CompileLog("file Name : " + fileName)
+        Log.CompileLog("------------------------------------------")
         if not OJRunner.__createCompileShellFile(codeName,exeName,compileType):
             Popen('rm ' + DATA.HOST_SHELL_PATH + '/' + fileName,shell=True, stdin=PIPE,stdout=PIPE, close_fds=True)
             return False
         result = DockerRunner.runCompile(fileName)
-        Log.LOG("------------------------------------------")
-        Log.LOG('Create Exe')
-        Log.LOG("------------------------------------------")
+        Log.CompileLog("------------------------------------------")
+        Log.CompileLog('Create Exe')
+        Log.CompileLog("------------------------------------------")
         Popen('rm ' + DATA.HOST_SHELL_PATH + '/' + fileName,shell=True, stdin=PIPE,stdout=PIPE, close_fds=True)
-        Log.LOG("------------------------------------------")
-        Log.LOG(result)
-        Log.LOG("------------------------------------------")
+        Log.CompileLog("------------------------------------------")
+        Log.CompileLog(result)
+        Log.CompileLog("------------------------------------------")
         if len(result) != 2:
             return False
         return True
@@ -110,7 +110,7 @@ class OJRunner:
 
         #选择编译器类型，若是python则要将代码从代码文件夹移动至可执行文件夹，若是JAVA则要在编译后，从代码文件夹剪切。CLASS文件到可移行文件夹
         #文件名由comepile_codeName_exeName_compileType.sh,其中，codeName中包括了用户ID，题目编号和日期，保证不重复
-        Log.LOG("CODE NAME : " + codeName + " EXE NAME : " + exeName + " COMPILE TYPE : " + compileType)
+        Log.CompileLog("CODE NAME : " + codeName + " EXE NAME : " + exeName + " COMPILE TYPE : " + compileType)
         compileName = ''
         if compileType == 'c':
             compileName = 'gcc ' + DATA.DOCKER_CODES_PATH + '/' + codeName  + '.c -o ' + DATA.DOCKER_EXES_PATH + '/' + exeName
@@ -121,11 +121,11 @@ class OJRunner:
             compileName += 'mv ' + DATA.DOCKER_CODES_PATH + '/' + exeName + '.class ' + DATA.DOCKER_EXES_PATH
         elif compileType == 'python':
             compileName = 'cp ' + DATA.DOCKER_CODES_PATH + '/' + codeName + '.py ' + DATA.DOCKER_EXES_PATH
-        Log.LOG("COMPILE NAME : " + str(compileName))
+        Log.CompileLog("COMPILE NAME : " + str(compileName))
         #生成编译的sh文件
         try:
             fileName = 'compile_' + codeName + '_' + exeName + '_' + compileType + '.sh'
-            Log.LOG("FILE NAME IN CREATE COMPILE SHELL : " + str(fileName))
+            Log.CompileLog("FILE NAME IN CREATE COMPILE SHELL : " + str(fileName))
             p = Popen('touch ' + DATA.HOST_SHELL_PATH + '/' + fileName,shell=True, stdin=PIPE,stdout=PIPE, close_fds=True)
             file = open(DATA.HOST_SHELL_PATH + '/' + fileName,"w")
             file.write('#! /bin/bash\n')
@@ -137,22 +137,27 @@ class OJRunner:
         return True
 
     @staticmethod
-    def runContainer(exeName, interpreter, param):
+    def runContainer(exeName, interpreter, question, param):
         """
         :param exeName: 要运行的可执行文件名
         :param param: 要传入的参数
         :param interpreter: 要运行的解释器名[C++,C,JAVA,PYTHON]
+        :param question : 问题类，用来提供各种限制参数
         :return:
         """
         #当shell语句成功实现才返回真，否则返回值，不进以后续操作
-        if not OJRunner.createRunShellFile(exeName, interpreter, param):
-            return False
+        if not OJRunner.createRunShellFile(exeName, interpreter, question, param):
+            Log.CustomerLOG("CREATE RUN SHELL FAIL")
+            return None
         fileName = 'run_' + exeName + '_' + interpreter + '.sh'
-        result = DockerRunner.runProgram(fileName)
+        try:
+            result = DockerRunner.runProgram(fileName)
+        except Exception,e:
+            print e
         return result
 
     @staticmethod
-    def createRunShellFile(exeName, interpreter, param = []):
+    def createRunShellFile(exeName, interpreter, question, param = []):
         """
         :param exeName: 要运行的可执行文件名
         :param param: 要传入的参数
@@ -175,9 +180,13 @@ class OJRunner:
             p = Popen('touch ' + DATA.HOST_SHELL_PATH + '/' + fileName,shell=True, stdin=PIPE,stdout=PIPE, close_fds=True)
             file = open(DATA.HOST_SHELL_PATH + '/' + fileName,"w")
             file.write('#! /bin/bash\n')
+            file.write('ulimit -s -t ' + str(question.getTime()) + '\n')
             file.write(exeSentence + '\n')
+            file.close()
             Popen("chmod 777 " + DATA.HOST_SHELL_PATH + '/' + fileName,shell=True, stdin=PIPE,stdout=PIPE, close_fds=True)
         except Exception,e:
+            print e.message
+            file.close()
             return False
         return True
 
@@ -191,9 +200,11 @@ class OJRunner:
         sysTime = None#存放运行的系统时间
         #检测是否是被杀死而终结
         time = re.compile(r'Killed',re.X)
+        Log.AnalysisResultLog("Result Analysis : " + str(result))
+        Log.AnalysisResultLog("Result Type : " + str(type(result)))
         match = time.findall(result)
         if len(match) != 0:
-            return 'Time Limit Exceeded'
+            return ['Time Limit Exceeded', time]
         #获取系统时间
         time = re.compile(r'sys\s*\d*m\d*.\d*s',re.X)
         match = time.findall(result)
@@ -206,20 +217,20 @@ class OJRunner:
             pattern = re.compile("(?<![\S*])" + str(item) + "(?![\S*])", re.M)
             match = pattern.search(result)
             if match == None:
-                return 'Wrong Answer'
+                return ['Wrong Answer', sysTime]
         #验证输出数量
         pattern = re.compile(r'\n', re.X)
         match = pattern.findall(result)
-        if len(match) - 4 != len(targetList):
-            return 'Output Limit Exceeded'
+        if len(match) - 5 != len(targetList):
+            return ['Output Limit Exceeded', sysTime]
         #验证格式是否出错
         pattern = re.compile(r'\n',re.X)
         match = pattern.split(result)
-        for i in range(0, len(targetList)):
+        for i in range(1, len(targetList)):
             matchStr = targetList[i]
             if len(str(matchStr)) != len(match[i]):
-                return 'Presentation Error'
-        return 'Accepted'
+                return ['Presentation Error', sysTime]
+        return ['Accepted', sysTime]
 
     @staticmethod
     def produce():
@@ -227,12 +238,18 @@ class OJRunner:
         while True:
             if OJRunner.mutex:
                 OJRunner.mutex = False
-                data = DataBase.DataBaseLinker.getInstance().execute("select * from Submit where result='Waiting'")
-                for item in data:
-                    OJRunner.queue.append(item)
+                #等待数据库没有访问后，读取新的数据
+                OJRunner.waitingDataBase()
+                submits = OJDBA.getSubmitsWhichWating()
+                #得到数据之后，要将所有数据改为running，避免部份数据在线程紧张时没被急时处理而不断被获取
+                for item in submits:
+                    OJDBA.updataRunning(item.getCodeName())
+                OJRunner.databaseMuxter = True
+                #合并两个数据
+                OJRunner.queue += submits
                 OJRunner.mutex = True
+            print "QUEUE : " + str(OJRunner.queue)
             time.sleep(10)
-            print OJRunner.queue
 
     @staticmethod
     def waitingDataBase():
@@ -257,55 +274,63 @@ class OJRunner:
             if len(OJRunner.queue) > 0:
                 #取取队列头，并清掉它
                 code = OJRunner.queue[0]
+                Log.CustomerLOG("The QUEUE LENGTH : " + str(len(OJRunner.queue)))
                 OJRunner.queue.remove(code)
-                Log.LOG("The QUEUE : " + str(OJRunner.queue))
-                OJDBA.updataRunning(code['codeName'])
+                Log.CustomerLOG("The QUEUE : " + str(OJRunner.queue))
+                Log.CustomerLOG("The QUEUE LENGTH : " + str(len(OJRunner.queue)))
                 #允许它人访问，将信号量置为True
                 OJRunner.customerMuxter = True
-                if code['type']=='cpp':
+                if code.getType() =='cpp':
                     compileType = 'cpp'
-                elif code['type'] == 'C':
+                elif code.getType() == 'C':
                     compileType = 'c'
-                elif code['type'] == 'JAVA':
+                elif code.getType() == 'JAVA':
                     compileType = 'java'
                 else:
                     compileType = 'python'
                 #进行编译,若编译失败则返回False，则在数据库中将记录更新为Compilation Error
-                if not OJRunner.compile(code['codeName'],code['codeName'],compileType):
+                if not OJRunner.compile(code.getCodeName(),code.getCodeName(), compileType):
                     OJRunner.waitingDataBase()
-                    DataBase.DataBaseLinker.getInstance().execute("update Submit set result='compilation error' where codeName='" + code['codeName'] + "'")
+                    OJDBA.updateCompilerError(code.getCodeName())
                     OJRunner.databaseMuxter = True
-                    return
+                    continue
                 #从数据库取出测试数据后，进行运行
                 #因数据库不能同时访问，所以只有当数据库信号量为真时，才可进行访问,拿到数据库访问权，访问该问题编号对应的洞晓试数据
                 OJRunner.waitingDataBase()
-                data = list(DataBase.DataBaseLinker.getInstance().execute("select * from TestData where question_id='" + code['question_id'] + "'"))
+                data = list(DataBase.DataBaseLinker.getInstance().execute("select * from TestData where question_id='" + code.getQuestionID() + "'"))
                 OJRunner.databaseMuxter = True
                 #执行十次运行，每次随机选出一组测试案例，并将未被测试数据的长度的最后一组代替当前被选种的组，且未测试数据长度减一
                 i = 0
                 acceptSuccess = True#用来标识是否成功AC
                 dictLength = len(data)
                 while i < DATA.JUDGEMENT_TIMES:
-                    Log.LOG("Run No." + str(i) + " Time : ")
+                    Log.CustomerLOG("Run No." + str(i) + " Time : ")
                     target = {}
                     position = random.randint(0,dictLength-1)
                     #将结果以JSON的格式进行解析
                     testData = json.loads(data[position]['test_data'])
                     targetResult = json.loads(data[position]['result_data'])
                     target['answer'] = targetResult
-                    result = OJRunner.runContainer(code['codeName'], compileType, testData)
+                    #运行容器去跑代码并得到结果
+                    question = OJDBA.getQuestionById(code.getQuestionID())
+                    result = OJRunner.runContainer(code.getCodeName(), compileType, question, testData)
+                    if result == None:#若结果为NONE说明没跑成功，目前先直接退出
+                        Log.CustomerLOG("RESULT IS NONE")
+                        acceptSuccess = False#AC失败，将标识设为False
+                        break
+                    Log.CustomerLOG(result)
                     OJResult = OJRunner.analysisResult(result, target)
-                    Log.LOG("-------------------------------------------------")
-                    Log.LOG("Test Data : " + str(testData) )
-                    Log.LOG("Program run result : " + result )
-                    Log.LOG("Test run result : " + str(target) )
-                    Log.LOG(OJResult )
-                    Log.LOG("-------------------------------------------------")
+                    Log.CustomerLOG("-------------------------------------------------")
+                    #Log.CustomerLOG("Test Data : " + str(testData) )
+                    Log.CustomerLOG("Program run result : " + result )
+                    Log.CustomerLOG("Test run result : " + str(target) )
+                    Log.CustomerLOG("Analysis Result : " + str(OJResult[0]) )
+                    Log.CustomerLOG("-------------------------------------------------")
                     #检测结果是否为AC，若不是则写入数据库跳出，执行下一份代码，若是则继续评测
-                    if OJResult != 'Accepted':
+                    if OJResult[0] != 'Accepted':
                         acceptSuccess = False#AC失败，将标识设为False
                         OJRunner.waitingDataBase()
-                        DataBase.DataBaseLinker.getInstance().execute("update Submit set result='" + OJResult + "' where codeName='" + code['codeName'] + "'")
+                        OJDBA.updateOtherResult(OJResult[0], code.getCodeName())
                         OJRunner.databaseMuxter = True
                         break
                     #将最后一个赋值给当前随机的这个，并总未测试数据总长减一
@@ -313,11 +338,11 @@ class OJRunner:
                     dictLength -= 1
                     i += 1
                 if acceptSuccess:
-                    DataBase.DataBaseLinker.getInstance().execute("update Submit set result='Accepted' where codeName='" + code['codeName'] + "'")
+                    OJDBA.updateOtherResult('Accepted', code.getCodeName())
             else:
                 OJRunner.customerMuxter = True
                 print 'Thread.' + str(threadId) + ' is sleeping......'
-                time.sleep(10)
+                time.sleep(2)
 
     @staticmethod
     def timeSupervisor():
