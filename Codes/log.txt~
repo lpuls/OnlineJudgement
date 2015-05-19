@@ -185,39 +185,3 @@ Thread.0 is sleeping......
 已杀死
 xp@ubuntu:~/OnlineJudgement/Codes$ Thread.0 is sleeping......
 clear
-
-
-
-xp@ubuntu:~$ ps aux | grep MAIN.py
-root      13812  0.0  0.1  71312  4032 pts/12   S+   22:24   0:00 sudo python MAIN.py
-root      13813  0.1  0.9 216212 18692 pts/12   Sl+  22:24   0:00 python MAIN.py
-xp        14122  0.0  0.1  15964  2220 pts/10   R+   22:26   0:00 grep --color=auto MAIN.py
-xp@ubuntu:~$ clear
-xp@ubuntu:~$ ps aux | grep MAIN.py
-root      13812  0.0  0.1  71312  4032 pts/12   S+   22:24   0:00 sudo python MAIN.py
-root      13813  0.1  0.9 216212 18692 pts/12   Sl+  22:24   0:00 python MAIN.py
-xp        14126  0.0  0.1  15964  2220 pts/10   R+   22:26   0:00 grep --color=auto MAIN.py
-xp@ubuntu:~$ sudo kill -s 9 13812
-[sudo] password for xp: 
-对不起，请重试。
-[sudo] password for xp: 
-对不起，请重试。
-[sudo] password for xp: 
-xp@ubuntu:~$ sudo kill -s 9 13813
-xp@ubuntu:~$ ps aux | grep MAIN.py
-root      14160  0.0  0.1  71312  4012 pts/12   S+   22:28   0:00 sudo python MAIN.py
-root      14161  0.2  0.9 216212 18696 pts/12   Sl+  22:28   0:00 python MAIN.py
-xp        14548  0.0  0.1  15964  2204 pts/10   R+   22:30   0:00 grep --color=auto MAIN.py
-xp@ubuntu:~$ sudo kill -s 9 14160
-xp@ubuntu:~$ sudo kill -s 9 14161
-xp@ubuntu:~$ ps aux | grep MAIN.py
-root      14665  0.0  0.2  71324  4176 pts/12   S+   22:35   0:00 sudo python MAIN.py
-root      14666  0.1  0.9 216212 18612 pts/12   Sl+  22:35   0:00 python MAIN.py
-xp        15268  0.0  0.1  15968  2220 pts/10   R+   22:38   0:00 grep --color=auto MAIN.py
-xp@ubuntu:~$ sudo kill -s 9 14665
-xp@ubuntu:~$ sudo kill -s 9 14666
-xp@ubuntu:~$ ps aux | grep Temp.py
-xp        21975  0.0  0.1  15964  2152 pts/10   S+   07:31   0:00 grep --color=auto Temp.py
-xp@ubuntu:~$ ps aux | grep MAIN.py
-xp        21978  0.0  0.1  15964  2140 pts/10   S+   07:31   0:00 grep --color=auto MAIN.py
-
