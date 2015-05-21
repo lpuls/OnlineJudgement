@@ -9,6 +9,11 @@ class TestData:
         self.__testData = testData
         self.__resultData = resultData
 
+    def __init__(self, dict):
+        self.__questionID = dict['question_id']
+        self.__testData = dict['test_data']
+        self.__resultData = dict['result_data']
+
     def getQuestionID(self):
         return self.__questionID
 

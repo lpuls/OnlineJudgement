@@ -1,9 +1,10 @@
-#coding:utf-8
+# coding:utf-8
 __author__ = 'xp'
 
 import time
 from Submit import Submit
 from Question import Question
+from TestData import TestData
 from DataBaseLinker import DataBaseLinker
 
 class OJDataBaseAdministrator:
@@ -41,9 +42,93 @@ class OJDataBaseAdministrator:
     def getSubmitWhichWaiting():
         OJDataBaseAdministrator.waitMutex()
         result = DataBaseLinker.getInstance().execute("select * from Submit where result='waiting'")
+        OJDataBaseAdministrator.releaseMutex()
         submits = []
         for item in result:
             submit = Submit(item)
             submits.append(submit)
-        OJDataBaseAdministrator.releaseMutex()
         return submits
+
+    @staticmethod
+    def getTestDataByQuestionID(id):
+        OJDataBaseAdministrator.waitMutex()
+        result = DataBaseLinker.getInstance().execute("select * from TestData where question_id='" + str(id) + "'")
+        OJDataBaseAdministrator.releaseMutex()
+        testDatas = []
+        for item in result:
+            testData = TestData(item)
+            testDatas.append(testData)
+        return testDatas
+
+    @staticmethod
+    def getUserByUserID(id):
+        OJDataBaseAdministrator.waitMutex()
+        result = DataBaseLinker.getInstance().execute("select * from Users where user_id='" + str(id) + "'")
+        OJDataBaseAdministrator.releaseMutex()
+        return result
+
+    @staticmethod
+    def updateCompilerError(codeName):
+        return OJDataBaseAdministrator.updataSubmitRrsult('Compiler Error', codeName)
+
+    @staticmethod
+    def updateRunning(codeName):
+        return OJDataBaseAdministrator.updataSubmitRrsult('Running', codeName)
+
+    @staticmethod
+    def updateMemoryLimitExceeded(codeName):
+        return OJDataBaseAdministrator.updataSubmitRrsult('Memory Limit Exceeded', codeName)
+
+    @staticmethod
+    def updateTimeLimitExceeded(codeName):
+        return OJDataBaseAdministrator.updataSubmitRrsult('Time Limit Exceeded', codeName)
+
+    @staticmethod
+    def updateRuntimeError(codeName):
+        return OJDataBaseAdministrator.updataSubmitRrsult('Runtime Error', codeName)
+
+    @staticmethod
+    def updateOutputLimitExceeded(codeName):
+        return OJDataBaseAdministrator.updataSubmitRrsult('Output Limit Exceeded', codeName)
+
+    @staticmethod
+    def updatePresentationError(codeName):
+        return OJDataBaseAdministrator.updataSubmitRrsult('Presentation Error', codeName)
+
+    @staticmethod
+    def updateAccepted(codeName):
+        return OJDataBaseAdministrator.updataSubmitRrsult('Accepted', codeName)
+
+    @staticmethod
+    def addQuestion(question):
+        OJDataBaseAdministrator.waitMutex()
+        result = DataBaseLinker.getInstance().execute("insert into Question (name, context, time, ram, point) value ('" + question.getName() + "', '" + question.getContext() + "',"+str(question.getTime())+","+str(question.getRam())+"," + str(question.getPoint()) + ")")
+        OJDataBaseAdministrator.releaseMutex()
+        return result
+
+    @staticmethod
+    def addSubmit(submit):
+        sql = "insert into Submit (user_id, question_id, submit_time, type, codeName, result) value ('"#xp',1,'2015-06-06 12:23:23','cpp','xp_0000_20150606122323_cpp','waiting');"
+        sql = sql + submit.getUserID() + "','" + str(submit.getQuestionID()) +"','" + submit.getSubmitTime() + "','" + submit.getType() + "','" + submit.getCodeName() + "','" + submit.getResult() + "')"
+        OJDataBaseAdministrator.waitMutex()
+        result = DataBaseLinker.getInstance().execute(sql)
+        OJDataBaseAdministrator.releaseMutex()
+        return result
+
+    @staticmethod
+    def addTestData(testData):
+        sql = "insert into TestData (question_id, test_data, result_data) value ("#1,'[1,1]','[2]');
+        sql = sql + str(testData.getQuestionID()) + ",'" + testData.getTestData() + "','" + testData.getResultData() + "')"
+        OJDataBaseAdministrator.waitMutex()
+        result = DataBaseLinker.getInstance().execute(sql)
+        OJDataBaseAdministrator.releaseMutex()
+        return result
+
+    @staticmethod
+    def addUser(userID, password, userSchool = "", userName="None Name"):
+        sql = "insert into Users (user_id, user_name, user_password, user_school) value ('"#xp','xp','085850','TKK');
+        sql = sql + userID + "','" + userName + "','" + password + "','" + userSchool + "')"
+        OJDataBaseAdministrator.waitMutex()
+        result = DataBaseLinker.getInstance().execute(sql)
+        OJDataBaseAdministrator.releaseMutex()
+        return result

@@ -35,7 +35,7 @@ class Submit:
     def getType(self):
         return self.__type
 
-    def getQuestion(self):
+    def getQuestionID(self):
         return self.__questionID
 
 

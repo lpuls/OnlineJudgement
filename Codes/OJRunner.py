@@ -1,4 +1,4 @@
-#coding:utf-8
+# -*- coding: UTF-8 -*-
 #!/usr/bin/env python
 __author__ = 'xp'
 
@@ -197,33 +197,33 @@ class OJRunner:
         :param targetResult: 目标结果
         :return:对比的结果{0:超时，1:答案错，2:正确答案}
         """
-        sysTime = None#存放运行的系统时间
-        #检测是否是被杀死而终结
+        sysTime = None  # 存放运行的系统时间
+        # 检测是否是被杀死而终结
         time = re.compile(r'Killed',re.X)
         Log.AnalysisResultLog("Result Analysis : " + str(result))
         Log.AnalysisResultLog("Result Type : " + str(type(result)))
         match = time.findall(result)
         if len(match) != 0:
             return ['Time Limit Exceeded', time]
-        #获取系统时间
+        # 获取系统时间
         time = re.compile(r'sys\s*\d*m\d*.\d*s',re.X)
         match = time.findall(result)
         time = re.compile(r'\d*m\d*.\d*s',re.X)
         sysTime = time.findall(match[0])
-        #获取计算结果
+        # 获取计算结果
         targetList = targetResult['answer']
-        #验证输出结果
+        # 验证输出结果
         for item in targetList:
             pattern = re.compile("(?<![\S*])" + str(item) + "(?![\S*])", re.M)
             match = pattern.search(result)
             if match == None:
                 return ['Wrong Answer', sysTime]
-        #验证输出数量
+        # 验证输出数量
         pattern = re.compile(r'\n', re.X)
         match = pattern.findall(result)
         if len(match) - 5 != len(targetList):
             return ['Output Limit Exceeded', sysTime]
-        #验证格式是否出错
+        # 验证格式是否出错
         pattern = re.compile(r'\n',re.X)
         match = pattern.split(result)
         for i in range(1, len(targetList)):

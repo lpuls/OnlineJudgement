@@ -7,7 +7,9 @@ create table Question(
 	context TEXT not null,
 	time numeric default 1000,
 	ram numeric default 65536,
-    point int default 1
+    point int default 1,
+    submitTotal int default 1,
+    acceptTOtal int default 0
 )engine=INNODB auto_increment=0000 default charset=gbk;
 select * from Question;
 insert into Question (name, context, time, ram) value ('plus', 'Asked to enter a and b, and the output b,Input 10, 20, Output 30',1,1);
@@ -56,3 +58,5 @@ insert into TestData (question_id, test_data, result_data) value (1,'[10,0]','[1
 insert into TestData (question_id, test_data, result_data) value (1,'[0,10]','[10]');
 insert into TestData (question_id, test_data, result_data) value (1,'[-1,1]','[0]');
 insert into TestData (question_id, test_data, result_data) value (1,'[1,-1]','[0]');
+alter table Question add column submitTotal int not null default 1;
+alter table Question add column acceptTotal int not null default 0;
