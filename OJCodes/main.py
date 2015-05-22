@@ -7,6 +7,7 @@ from threading import Thread
 import Submit
 import TestData
 import Question
+import OJRunner
 import DataBaseLinker
 from Log import Log
 from PathData import DATA
@@ -21,19 +22,18 @@ from OJDataBaseAdministrator import OJDataBaseAdministrator as OJDBA
 # SUBMIT:    user_id, question_id, submit_time, type, codeName, result
 # TEST DATA: question_id, test_data, result_data
 
+string = """stack size              (kbytes, -s) 8192
+1
+
+real	0m0.002s
+user	0m0.000s
+sys	0m0.003s
+
+"""
+
 if __name__ == '__main__':
-    submitInfo = {'user_id': 'xp', 'question_id': '1', 'submit_time': '2015-06-06 12:23:25', 'type': 'cpp', 'codeName': 'xp_0000_20150606122323_cpp', 'result': 'waiting'}
-    submit = Submit.Submit(submitInfo)
-    customer = Customer()
-    if customer.compile(submit):
-        print 'run program'
-        question = OJDBA.getQuestion(submit.getQuestionID())
-        result = customer.runProgram(submit.getCodeName(), submit.getType(), question, [1, 2])
-        print result
-        if result is not None:
-            print AnalysisResult.analysis(result, [3])
-        else:
-            print 'Run None Type'
-    else:
-        print 'Compile None Type'
-    print 'OVER'
+    # print AnalysisResult.analysis(string, [3])
+
+     oj = OJRunner.OJRunner()
+     oj.startJudgement()
+

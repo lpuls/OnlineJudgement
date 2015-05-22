@@ -3,3 +3,26 @@
 real	0m0.003s
 user	0m0.000s
 sys	0m0.003s
+
+
+CUSTOMER: Start......
+Wait the manufacturer mutex
+Get Head
+Remove Head
+CUSTOMER: The submit code name is : xp_0000_20150606122324_cpp
+CUSTOMER: Start Compile
+Compile: create compile file
+Compile: Get Compile Name
+Compile: Create file and write data
+Compile: write data over
+The length of queue is : 0
+The length of queue is : 0
+CUSTOMER: Over Compile
+CUSTOMER: COMPILE RESULT :
+g++: error: /home/codes/xp_0000_20150606122324_cpp.cpp: No such file or directory
+g++: fatal error: no input files
+compilation terminated.
+fail
+
+CUSTOMER: Compile Error
+CUSTOMER: Over......

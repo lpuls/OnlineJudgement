@@ -4,6 +4,7 @@ __author__ = 'xp'
 import re
 
 from PathData import DATA
+from Log import Log
 
 
 class AnalysisResult:
@@ -19,18 +20,23 @@ class AnalysisResult:
 
     @staticmethod
     def analysis(result, target):
+        Log.AnalysisResultLOG('ANALYSIS : 0')
         if AnalysisResult.isMemoryLimitExceeded(result):
             return DATA.MEMORY_LIMIT_EXCEEDED
-        elif AnalysisResult.isTimeOut(result):
+        Log.AnalysisResultLOG('ANALYSIS : 1')
+        if AnalysisResult.isTimeOut(result):
             return DATA.TIME_LIMIT_EXCEEDED
-        elif AnalysisResult.isWrongAnswer(result, target):
+        Log.AnalysisResultLOG('ANALYSIS : 2')
+        if AnalysisResult.isWrongAnswer(result, target):
             return DATA.WRONG_ANSWER
-        elif AnalysisResult.isOutputLimitExceeded(result, target):
+        Log.AnalysisResultLOG('ANALYSIS : 3')
+        if AnalysisResult.isOutputLimitExceeded(result, target):
             return DATA.OUTPUT_LIMIT_EXCEEDED
-        elif AnalysisResult.isPresentationERror(result, target):
+        Log.AnalysisResultLOG('ANALYSIS : 4')
+        if AnalysisResult.isPresentationERror(result, target):
             return DATA.PRESENTATION_ERROR
-        else:
-            return DATA.ACCEPT
+        Log.AnalysisResultLOG('ANALYSIS : 5')
+        return DATA.ACCEPT
 
     @staticmethod
     def analysisTime(result):
@@ -63,7 +69,10 @@ class AnalysisResult:
     def isWrongAnswer(result, target):
         # 验证输出结果
         for item in target:
-            pattern = re.compile("(?<![\S*])" + str(item) + "(?![\S*])", re.M)
+            # here is a bug!!!
+            pattern = re.compile(r'(?<![\S*])' + str(item) + r'(?![\S*])', re.X)
+            Log.AnalysisResultLOG('ANALYSIS : the item in target is ' + str(item))
+            #pattern = re.compile(str(item), re.X)
             match = pattern.search(result)
             if match is None:
                 return True
@@ -74,6 +83,8 @@ class AnalysisResult:
         # 验证输出数量
         pattern = re.compile(r'\n', re.X)
         match = pattern.findall(result)
+        Log.AnalysisResultLOG('ANALYSIS : this length of match is ' + str(len(match)))
+        Log.AnalysisResultLOG('ANALYSIS : this length of target is ' + str(len(target)))
         if len(match) - 5 != len(target):
             return True
         return False
@@ -85,7 +96,7 @@ class AnalysisResult:
     @staticmethod
     def isPresentationERror(result, target):
         # 验证格式是否出错
-        pattern = re.compile(r'\n',re.X)
+        pattern = re.compile(r'\n', re.X)
         match = pattern.split(result)
         for i in range(1, len(target)):
             matchStr = target[i]

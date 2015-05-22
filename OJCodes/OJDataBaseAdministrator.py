@@ -142,9 +142,7 @@ class OJDataBaseAdministrator:
 
     @staticmethod
     def updateByResult(result, codeName):
-        if result == DATA.COMPILE_ERROR:
-            OJDataBaseAdministrator.updateCompilerError(codeName)
-        elif result == DATA.MEMORY_LIMIT_EXCEEDED:
+        if result == DATA.MEMORY_LIMIT_EXCEEDED:
             OJDataBaseAdministrator.updateMemoryLimitExceeded(codeName)
         elif result == DATA.TIME_LIMIT_EXCEEDED:
             OJDataBaseAdministrator.updateTimeLimitExceeded(codeName)
@@ -154,5 +152,3 @@ class OJDataBaseAdministrator:
             OJDataBaseAdministrator.updateOutputLimitExceeded(codeName)
         elif result == DATA.PRESENTATION_ERROR:
             OJDataBaseAdministrator.updatePresentationError(codeName)
-        elif result == DATA.ACCEPT:
-            OJDataBaseAdministrator.updateAccepted(codeName)

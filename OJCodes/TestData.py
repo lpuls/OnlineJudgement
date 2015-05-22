@@ -24,11 +24,11 @@ class TestData:
         return self.__resultData
 
     def getTestDataByList(self):
-        stdData = json.dumps(self.__testData)
-        testDataList = json.loads(stdData)
+        #stdData = json.dumps(self.__testData)
+        testDataList = json.loads(self.__testData)
         return testDataList
 
     def getResultDataByList(self):
-        stdData = json.dumps(self.__resultData)
-        resultDataList = json.loads(stdData)
+        #stdData = json.dumps(self.__resultData)
+        resultDataList = json.loads(self.__resultData)
         return resultDataList

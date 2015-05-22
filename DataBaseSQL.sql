@@ -1,5 +1,6 @@
 create database XPOJ;
 use XPOJ;
+SET SQL_SAFE_UPDATES=0;
 drop table Question;
 create table Question(
 	id int primary key auto_increment,
@@ -60,3 +61,5 @@ insert into TestData (question_id, test_data, result_data) value (1,'[-1,1]','[0
 insert into TestData (question_id, test_data, result_data) value (1,'[1,-1]','[0]');
 alter table Question add column submitTotal int not null default 1;
 alter table Question add column acceptTotal int not null default 0;
+delete from Submit where codeName='xp_1_20150519124411_cpp';
+update Submit set result = 'waiting' where codeName = 'xp_0000_20150606122324_cpp';
