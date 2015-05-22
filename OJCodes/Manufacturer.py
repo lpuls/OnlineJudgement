@@ -2,6 +2,8 @@
 __author__ = 'xp'
 
 import time
+import random
+import threading
 
 from PathData import DATA
 from OJDataBaseAdministrator import OJDataBaseAdministrator as OJDBA
@@ -13,23 +15,26 @@ class Manufacturer:
 
     def __init__(self):
         self.__queue = []
-        self.__mutex = True  # a sign whether can visit the __queue
+        self.__mutex = True  # a sign whether can access the __queue
+        self.__thread = None  # this thread is used to get submit from data base
 
     @staticmethod
     def getInstance():
         if Manufacturer.__manufacturer == None:
             Manufacturer.__manufacturer = Manufacturer()
+            Manufacturer.__manufacturer.__thread = threading.Thread(target=Manufacturer.__manufacturer.getDataFromDB)
+            Manufacturer.__manufacturer.__thread.start()
         return Manufacturer.__manufacturer
 
-    # wait the sign which be call __mutex to prevent other thread visit the __queue
+    # wait the sign which be call __mutex prevent other thread access the __queue
     def waitMutex(self):
         while True:
-            if Manufacturer.getInstance().__mutex:
-                Manufacturer.getInstance().__mutex = False
+            if self.__mutex:
+                self.__mutex = False
                 break
             time.sleep(0.1)
 
-    # release the sign which be call __mutex to guarantee other thread can visit the __queue
+    # release the sign which be call __mutex to guarantee other thread can access the __queue
     def releaseMutex(self):
         self.__mutex = True
 
@@ -42,9 +47,25 @@ class Manufacturer:
             self.releaseMutex()
             time.sleep(DATA.MANUFACTURE_SLEEP_TIME)
 
+    # remove the first submit of __queue
+    def __removeFromQueue(self, submit):
+        try:
+            self.waitMutex()
+            self.__queue.remove(submit)
+            self.releaseMutex()
+        except Exception,e:
+            errorLog = file(DATA.HOST_ERROR_LOG_PATH + '/remove_queue_' + str(time.time()) + str(random.randint(1000, 9999)) + '.log', 'w')
+            errorLog.write(e.message)
+            errorLog.close()
+            return False
+        return True
+
     # get the first submit  of __queue
     def getQueueHead(self):
+        submit = None
         self.waitMutex()
-        submit = self.__queue[0]
+        if len(self.__queue) > 0:
+            submit = self.__queue[0]
         self.releaseMutex()
+        self.__removeFromQueue(submit)
         return submit

@@ -19,6 +19,9 @@ class DATA:
     # the number of judgment thread
     THREAD_TOTAL = 1
 
+    # this time is lifetime of a container
+    CONTAINER_LIFETIME = 10
+
     # the image name of docker which will be used
     DOCKER_IMAGE_NAME = 'xpsama/xp_oj_compile:v1.2'
 

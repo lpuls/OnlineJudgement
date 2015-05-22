@@ -4,6 +4,10 @@ __author__ = 'xp'
 import time
 import threading
 
+from Log import Log
+from PathData import DATA
+from DockerRunner import DockerRunner
+
 
 class TimeSupervisor:
     def __init__(self, containerID, timeLimit = 10):
@@ -20,6 +24,9 @@ class TimeSupervisor:
         while True:
             if self.__isTimming:
                 self.__timeTotal += 1
+                if self.__timeTotal > DATA.CONTAINER_LIFETIME:
+                    DockerRunner.removeContainer(self.__containerID)
+                    self.__isTimming = False
             time.sleep(1)
 
     def stop(self):

@@ -1,8 +1,11 @@
 #coding:utf-8
 __author__ = 'xp'
 
+import time
+import random
 import MySQLdb
-from Question import Question
+
+from PathData import DATA
 
 class DataBaseLinker:
     __connect = None
@@ -55,7 +58,9 @@ class DataBaseLinker:
             DataBaseLinker.__connect.commit()
             cur.close()
         except Exception, e:
-            print e
+            errorLog = file(DATA.HOST_ERROR_LOG_PATH + '/execute_sql_' + str(time.time()) + str(random.randint(1000, 9999)) + '.log', 'w')
+            errorLog.write(e.message)
+            errorLog.close()
         finally:
             return result
 

@@ -2,10 +2,13 @@
 __author__ = 'xp'
 
 import time
+
 from Submit import Submit
+from PathData import DATA
 from Question import Question
 from TestData import TestData
 from DataBaseLinker import DataBaseLinker
+
 
 class OJDataBaseAdministrator:
     __mutex = True
@@ -88,6 +91,10 @@ class OJDataBaseAdministrator:
         return OJDataBaseAdministrator.updataSubmitRrsult('Runtime Error', codeName)
 
     @staticmethod
+    def updateWrongAnswer(codeName):
+        return OJDataBaseAdministrator.updataSubmitRrsult('Wrong Answer', codeName)
+
+    @staticmethod
     def updateOutputLimitExceeded(codeName):
         return OJDataBaseAdministrator.updataSubmitRrsult('Output Limit Exceeded', codeName)
 
@@ -132,3 +139,20 @@ class OJDataBaseAdministrator:
         result = DataBaseLinker.getInstance().execute(sql)
         OJDataBaseAdministrator.releaseMutex()
         return result
+
+    @staticmethod
+    def updateByResult(result, codeName):
+        if result == DATA.COMPILE_ERROR:
+            OJDataBaseAdministrator.updateCompilerError(codeName)
+        elif result == DATA.MEMORY_LIMIT_EXCEEDED:
+            OJDataBaseAdministrator.updateMemoryLimitExceeded(codeName)
+        elif result == DATA.TIME_LIMIT_EXCEEDED:
+            OJDataBaseAdministrator.updateTimeLimitExceeded(codeName)
+        elif result == DATA.WRONG_ANSWER:
+            OJDataBaseAdministrator.updateWrongAnswer(codeName)
+        elif result == DATA.OUTPUT_LIMIT_EXCEEDED:
+            OJDataBaseAdministrator.updateOutputLimitExceeded(codeName)
+        elif result == DATA.PRESENTATION_ERROR:
+            OJDataBaseAdministrator.updatePresentationError(codeName)
+        elif result == DATA.ACCEPT:
+            OJDataBaseAdministrator.updateAccepted(codeName)

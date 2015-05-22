@@ -3,6 +3,8 @@ __author__ = 'xp'
 
 import re
 
+from PathData import DATA
+
 
 class AnalysisResult:
 
@@ -17,7 +19,18 @@ class AnalysisResult:
 
     @staticmethod
     def analysis(result, target):
-        pass
+        if AnalysisResult.isMemoryLimitExceeded(result):
+            return DATA.MEMORY_LIMIT_EXCEEDED
+        elif AnalysisResult.isTimeOut(result):
+            return DATA.TIME_LIMIT_EXCEEDED
+        elif AnalysisResult.isWrongAnswer(result, target):
+            return DATA.WRONG_ANSWER
+        elif AnalysisResult.isOutputLimitExceeded(result, target):
+            return DATA.OUTPUT_LIMIT_EXCEEDED
+        elif AnalysisResult.isPresentationERror(result, target):
+            return DATA.PRESENTATION_ERROR
+        else:
+            return DATA.ACCEPT
 
     @staticmethod
     def analysisTime(result):
@@ -40,7 +53,7 @@ class AnalysisResult:
     @staticmethod
     def isTimeOut(result):
         # 检测是否是被杀死而终结
-        time = re.compile(r'Killed',re.X)
+        time = re.compile(r'Killed', re.X)
         match = time.findall(result)
         if len(match) != 0:
             return True
@@ -52,7 +65,7 @@ class AnalysisResult:
         for item in target:
             pattern = re.compile("(?<![\S*])" + str(item) + "(?![\S*])", re.M)
             match = pattern.search(result)
-            if match == None:
+            if match is None:
                 return True
         return False
 
@@ -61,8 +74,12 @@ class AnalysisResult:
         # 验证输出数量
         pattern = re.compile(r'\n', re.X)
         match = pattern.findall(result)
-        if len(match) - 4 != len(target):
+        if len(match) - 5 != len(target):
             return True
+        return False
+
+    @staticmethod
+    def isMemoryLimitExceeded(result):
         return False
 
     @staticmethod

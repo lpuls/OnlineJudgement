@@ -27,6 +27,7 @@ class DockerRunner:
         return DockerRunner.__dockerRunner
 
     def createContainer(self, type):
+        container = None
         binds = {}  # binds is the relationship of host and docker what the path of files
         volumes = []  # volumes is which paths in the docker
         # the type is COMPILE and RUN, but their path is different
@@ -40,14 +41,14 @@ class DockerRunner:
             volumes = [DATA.DOCKER_SHELL_PATH, DATA.DOCKER_CODES_PATH, DATA.DOCKER_EXES_PATH]
         # create a docker container and run it
         try:
-            s = DockerRunner.__dockerLinker.create_container(image=DATA.DOCKER_IMAGE_NAME,  command=['/bin/bash'], volumes= volumes, stdin_open=True, tty=False)
-            DockerRunner.__dockerLinker.start(container=s['Id'], binds=binds)
+            container = DockerRunner.__dockerLinker.create_container(image=DATA.DOCKER_IMAGE_NAME,  command=['/bin/bash'], volumes=volumes, stdin_open=True, tty=False)
+            DockerRunner.__dockerLinker.start(container=container['Id'], binds=binds)
         except Exception,e:
             errorLog = file(DATA.HOST_ERROR_LOG_PATH + '/create_docker_container_' + str(time.time()) + str(random.randint(1000,9999)) + '.log','w')
             errorLog.write(e.message)
             errorLog.close()
         finally:
-            return s
+            return container
 
     def execCommand(self, container, cmd = []):
         try:

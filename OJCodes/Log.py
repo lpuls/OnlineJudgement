@@ -10,12 +10,12 @@ class Log:
 
     @staticmethod
     def LOG(value):
-        if Log.isDebud:
+        if Log.isDebug:
             print value
 
     @staticmethod
     def CustomerLOG(value):
-        if Log.isCustomer :
+        if Log.isCustomer:
             Log.LOG(value)
 
     @staticmethod
