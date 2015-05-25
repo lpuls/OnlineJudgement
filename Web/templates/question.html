@@ -5,11 +5,16 @@
     <title>{{questionID}}</title>
 </head>
 <body>
-{{questionID}}
-Memory:{{questionTIme}}
-Time:{{questionMemory}}
-{{questionName}}
-{{questionContext}}
-
+<center>
+    {{questionID}}<br>
+    Time:{{questionTime}}<br>
+    Memory:{{questionMemory}}<br>
+    {{questionName}}<br>
+    {{questionContext}}<br>
+    <form action="/submit" method="get">
+        <input type="submit" value="Submit Code">
+    </form>
+    <a href="/questions">Back</a>
+</center>
 </body>
 </html>

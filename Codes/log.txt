@@ -188,7 +188,7 @@ clear
 
 
 
-xp@ubuntu:~$ ps aux | grep MAIN.py
+xp@ubuntu:~$ ps auxsudo
 root      13812  0.0  0.1  71312  4032 pts/12   S+   22:24   0:00 sudo python MAIN.py
 root      13813  0.1  0.9 216212 18692 pts/12   Sl+  22:24   0:00 python MAIN.py
 xp        14122  0.0  0.1  15964  2220 pts/10   R+   22:26   0:00 grep --color=auto MAIN.py

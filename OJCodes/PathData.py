@@ -41,3 +41,12 @@ class DATA:
 
     # the sleep time of Manufacture
     MANUFACTURE_SLEEP_TIME = 5
+
+    # get a string time
+    @staticmethod
+    def getStringTime(stringTime):
+        now = ''
+        for item in stringTime:
+            if item >= '0' and item <= '9':
+                now += item
+        return now
