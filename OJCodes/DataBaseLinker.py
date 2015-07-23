@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 __author__ = 'xp'
 
 import time
@@ -16,7 +16,8 @@ class DataBaseLinker:
         @:argument 连接至服务器数据库
         @:param 无
         """
-        DataBaseLinker.__connect = MySQLdb.connect( host='localhost', port=3306, user='root', passwd='SWE12037lpuls', db='XPOJ', charset="utf8")
+        DataBaseLinker.__connect = MySQLdb.connect(host='localhost', port=3306, user='root', passwd='SWE12037lpuls',
+                                                   db='XPOJ', charset="utf8")
 
     def otherLinker(self, host, port, user, passwd, db):
         """
@@ -37,7 +38,7 @@ class DataBaseLinker:
             @:type string
             @:argument 连接的数据库名
         """
-        DataBaseLinker.__connect = MySQLdb.connect( host=host, port=port, user=user, passwd=passwd, db=db )
+        DataBaseLinker.__connect = MySQLdb.connect(host=host, port=port, user=user, passwd=passwd, db=db)
 
     def closeLink(self):
         """
@@ -58,9 +59,10 @@ class DataBaseLinker:
             DataBaseLinker.__connect.commit()
             cur.close()
         except Exception, e:
-            errorLog = file(DATA.HOST_ERROR_LOG_PATH + '/execute_sql_' + str(time.time()) + str(random.randint(1000, 9999)) + '.log', 'w')
-            errorLog.write(e.message)
-            errorLog.close()
+            error_log = file(DATA.HOST_ERROR_LOG_PATH + '/execute_sql_' + str(time.time()) +
+                            str(random.randint(1000, 9999)) + '.log', 'w')
+            error_log.write(e.message)
+            error_log.close()
         finally:
             return result
 
@@ -69,6 +71,6 @@ class DataBaseLinker:
         """
         :return: DataBaseLinker的单例
         """
-        if DataBaseLinker.__dataBaseLinker == None:
+        if DataBaseLinker.__dataBaseLinker is None:
             DataBaseLinker.__dataBaseLinker = DataBaseLinker()
         return DataBaseLinker.__dataBaseLinker

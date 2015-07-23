@@ -11,95 +11,102 @@ from PathData import DATA
 
 
 class ShellCreater:
+    def __init__(self):
+        pass
 
     @staticmethod
-    def createCompileShell(codeName, exeName, compileType):
-        Log.CompileLOG('Compile: create compile file')
-        shell = Shell(name= 'compile_' + codeName + '_' + exeName + '_' + compileType + '.sh', path=DATA.HOST_SHELL_PATH)
+    def create_compile_shell(code_name, exe_name, compile_type):
+        Log.compile_log('Compile: create compile file')
+        shell = Shell(name= 'compile_' + code_name + '_' + exe_name + '_' + compile_type + '.sh',
+                      path=DATA.HOST_SHELL_PATH)
         # 生成编译的sh文件
-        compileName = ''
-        if compileType.upper() == 'C':
-            compileName = 'gcc ' + DATA.DOCKER_CODES_PATH + '/' + codeName + '.c -o ' + DATA.DOCKER_EXES_PATH + '/' + exeName
-        elif compileType.upper() == 'CPP':
-            compileName = 'g++ ' + DATA.DOCKER_CODES_PATH + '/' + codeName + '.cpp -o ' + DATA.DOCKER_EXES_PATH + '/' + exeName
-        elif compileType.upper() == 'JAVA':
-            compileName = 'javac ' + DATA.DOCKER_CODES_PATH + '/' + codeName + '.java\n'
-            compileName += 'mv ' + DATA.DOCKER_CODES_PATH + '/' + exeName + '.class ' + DATA.DOCKER_EXES_PATH
-        elif compileType.upper() == 'PY':
-            compileName = 'cp ' + DATA.DOCKER_CODES_PATH + '/' + codeName + '.py ' + DATA.DOCKER_EXES_PATH
-        Log.CompileLOG('Compile: Get Compile Name')
+        compile_name = ''
+        if compile_type.upper() == 'C':
+            compile_name = 'gcc ' + DATA.DOCKER_CODES_PATH + '/' + code_name + '.c -o ' \
+                           + DATA.DOCKER_EXES_PATH + '/' + exe_name
+        elif compile_type.upper() == 'CPP':
+            compile_name = 'g++ ' + DATA.DOCKER_CODES_PATH + '/' + code_name + '.cpp -o ' \
+                           + DATA.DOCKER_EXES_PATH + '/' + exe_name
+        elif compile_type.upper() == 'JAVA':
+            compile_name = 'javac ' + DATA.DOCKER_CODES_PATH + '/' + code_name + '.java\n'
+            compile_name += 'mv ' + DATA.DOCKER_CODES_PATH + '/' + exe_name + '.class ' + DATA.DOCKER_EXES_PATH
+        elif compile_type.upper() == 'PY':
+            compile_name = 'cp ' + DATA.DOCKER_CODES_PATH + '/' + code_name + '.py ' + DATA.DOCKER_EXES_PATH
+        Log.compile_log('Compile: Get Compile Name')
         try:
-            Log.CompileLOG('Compile: Create file and write data')
-            file = open(shell.getPath() + '/' + shell.getName(), 'w')
-            file.write("#! /bin/bash\n")
-            file.write(compileName + '\n')
-            file.write("if [ \"$?\" = \"0\" ]\n")
-            file.write("then echo 'success'\nelse\necho 'fail'\nfi")
-            file.close()
-            Log.CompileLOG('Compile: write data over')
-            os.system("chmod 777 " + shell.getPath() + '/' + shell.getName())
+            Log.compile_log('Compile: Create file and write data')
+            compile_file = open(shell.get_path() + '/' + shell.get_name(), 'w')
+            compile_file.write("#! /bin/bash\n")
+            compile_file.write(compile_name + '\n')
+            compile_file.write("if [ \"$?\" = \"0\" ]\n")
+            compile_file.write("then echo 'success'\nelse\necho 'fail'\nfi")
+            compile_file.close()
+            Log.compile_log('Compile: write data over')
+            os.system("chmod 777 " + shell.get_path() + '/' + shell.get_name())
         except Exception,e:
-            file.close()
+            compile_file.close()
             print e.message
-            errorLog = file(DATA.HOST_ERROR_LOG_PATH + '/create_compile_shell_' + str(time.time()) + str(random.randint(1000,9999)) + '.log','w')
-            errorLog.write(e.message)
-            errorLog.close()
+            error_log = compile_file(DATA.HOST_ERROR_LOG_PATH + '/create_compile_shell_' + str(time.time()) + str(random.randint(1000,9999)) + '.log','w')
+            error_log.write(e.message)
+            error_log.close()
             return None
         return shell
 
     @staticmethod
-    def createRunShell(exeName, interpreter, question, param=[]):
-        Log.CompileLOG('RUN: create run file')
+    def create_run_shell(exe_name, interpreter, question, param=[]):
+        Log.compile_log('RUN: create run file')
         scale = 1
         suffix = ''
-        interpreterValue = ''
-        exeSentence = 'time ('
+        interpreter_value = ''
+        exe_sentence = 'time ('
         if len(param) > 0:
-            exeSentence += 'echo '
+            exe_sentence += 'echo '
             for item in param:
-                exeSentence += (str(item) + ' ')
-            exeSentence += ' | '
+                exe_sentence += (str(item) + ' ')
+            exe_sentence += ' | '
         if interpreter.upper() == 'C' or interpreter.upper() == 'CPP':
-            interpreterValue = ''
+            interpreter_value = ''
         elif interpreter.upper() == 'PY':
-            interpreterValue = 'python'
+            interpreter_value = 'python'
             scale = 3
             suffix = '.py'
         elif interpreter.upper() == 'JAVA':
-            interpreterValue = 'java'
+            interpreter_value = 'java'
             scale = 2
             suffix = '.java'
-        Log.CompileLOG('RUN: Get interpreter value')
-        exeSentence += (interpreterValue + ' .' + DATA.DOCKER_EXES_PATH + '/' + exeName + suffix + ' )')
-        Log.CompileLOG('RUN: The Exesentence is : '+exeSentence)
-        #生成编译的sh文件
+        Log.compile_log('RUN: Get interpreter value')
+        exe_sentence += (interpreter_value + ' .' + DATA.DOCKER_EXES_PATH + '/' + exe_name + suffix + ' )')
+        Log.compile_log('RUN: The Exesentence is : '+exe_sentence)
+        # 生成编译的sh文件
         try:
-            Log.CompileLOG('RUN: create file and write data')
-            shell = Shell(name='run_'+exeName+'_'+interpreter+'.sh', path=DATA.HOST_SHELL_PATH)
-            Log.CompileLOG('RUN: ' + shell.getPath() + '/' + shell.getName())
-            file = open(shell.getPath() + '/' + shell.getName(), "w")
-            file.write('#! /bin/bash\n')
-            file.write('ulimit -s -t ' + str(question.getTime() * scale) + '\n')
-            file.write(exeSentence + '\n')
-            file.close()
-            Log.CompileLOG('RUN: write data over')
-            Popen("chmod 777 " + shell.getPath() + '/' + shell.getName(),shell=True, stdin=PIPE,stdout=PIPE, close_fds=True)
-        except Exception,e:
-            file.close()
-            Log.CompileLOG('RUN: The error is : ' + e.message )
-            errorLog = file(DATA.HOST_ERROR_LOG_PATH + '/create_run_shell_' + str(time.time()) + str(random.randint(1000,9999)) + '.log', 'w')
-            errorLog.write(e.message)
-            errorLog.close()
+            Log.compile_log('RUN: create file and write data')
+            shell = Shell(name='run_'+exe_name+'_'+interpreter+'.sh', path=DATA.HOST_SHELL_PATH)
+            Log.compile_log('RUN: ' + shell.get_path() + '/' + shell.get_name())
+            run_file = open(shell.get_path() + '/' + shell.get_name(), "w")
+            run_file.write('#! /bin/bash\n')
+            run_file.write('ulimit -s -t ' + str(question.get_time() * scale) + '\n')
+            run_file.write(exe_sentence + '\n')
+            run_file.close()
+            Log.compile_log('RUN: write data over')
+            Popen("chmod 777 " + shell.get_path() + '/' + shell.get_name(),shell=True, stdin=PIPE,stdout=PIPE, close_fds=True)
+        except Exception, e:
+            run_file.close()
+            Log.compile_log('RUN: The error is : ' + e.message )
+            error_log = run_file(DATA.HOST_ERROR_LOG_PATH + '/create_run_shell_' + str(time.time())
+                                 + str(random.randint(1000, 9999)) + '.log', 'w')
+            error_log.write(e.message)
+            error_log.close()
             return None
         return shell
 
     @staticmethod
-    def removeShell(shell):
+    def remove_shell(shell):
         try:
-            os.system('rm ' + shell.getPath() + '/' + shell.getName())
-        except Exception,e:
-            errorLog = file(DATA.HOST_ERROR_LOG_PATH + '/create_run_shell_' + str(time.time()) + str(random.randint(1000,9999)) + '.log', 'w')
-            errorLog.write(e.message)
-            errorLog.close()
+            os.system('rm ' + shell.get_path() + '/' + shell.get_name())
+        except Exception, e:
+            error_log = file(DATA.HOST_ERROR_LOG_PATH + '/create_run_shell_' + str(time.time())
+                            + str(random.randint(1000, 9999)) + '.log', 'w')
+            error_log.write(e.message)
+            error_log.close()
             return False
         return True

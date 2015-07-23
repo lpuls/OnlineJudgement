@@ -33,7 +33,6 @@ sys	0m0.003s
 
 if __name__ == '__main__':
     # print AnalysisResult.analysis(string, [3])
-
-     oj = OJRunner.OJRunner()
-     oj.startJudgement()
+    oj = OJRunner.OJRunner()
+    oj.start_judgement()
 

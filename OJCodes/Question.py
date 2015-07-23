@@ -2,15 +2,15 @@
 __author__ = 'xp'
 
 class Question:
-    def __init__(self, time, ram, id, context, name, point, submitTotal, accpetTotal):
+    def __init__(self, time, ram, question_id, context, name, point, submit_total, accept_total):
         self.__time = int(time)
         self.__ram = int(ram)
-        self.__id = int(id)
+        self.__id = int(question_id)
         self.__context = context
         self.__name = name
         self.__point = int(point)
-        self.__submitTotal = submitTotal
-        self.__acceptTotal = accpetTotal
+        self.__submitTotal = submit_total
+        self.__acceptTotal = accept_total
 
     def __init__(self, dict):
         self.__id = dict['id']
@@ -22,26 +22,26 @@ class Question:
         self.__submitTotal = dict['submitTotal']
         self.__acceptTotal = dict['acceptTotal']
 
-    def getTime(self):
+    def get_time(self):
         return self.__time
 
-    def getRam(self):
+    def get_ram(self):
         return self.__ram
 
-    def getID(self):
+    def get_id(self):
         return self.__id
 
-    def getContext(self):
+    def get_context(self):
         return self.__context
 
-    def getName(self):
+    def get_name(self):
         return self.__name
 
-    def getPoint(self):
+    def get_point(self):
         return self.__point
 
-    def getSubmitTotal(self):
+    def get_submit_total(self):
         return self.__submitTotal
 
-    def getAccepTOtal(self):
+    def get_accept_total(self):
         return self.__acceptTotal

@@ -2,6 +2,9 @@ __author__ = 'xp'
 
 
 class DATA:
+    def __init__(self):
+        pass
+
     # the path of codes, exes, shell, and error log file in docker
     HOST_CODES_PATH = '/home/codes'
     HOST_EXES_PATH = '/home/exes'

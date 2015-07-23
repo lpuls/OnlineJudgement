@@ -11,14 +11,14 @@ from Manufacturer import Manufacturer
 
 class OJRunner:
     def __init__(self):
-        self.manufactureThread = threading.Thread(target=Manufacturer.getInstance().getDataFromDB)
+        self.manufactureThread = threading.Thread(target=Manufacturer.getInstance().get_data_from_db)
         self.customerThread = []
         for i in range(0, DATA.THREAD_TOTAL):
             customer = Customer()
             thread = threading.Thread(target=customer.consumption)
             self.customerThread.append(thread)
 
-    def startJudgement(self):
+    def start_judgement(self):
         self.manufactureThread.start()
         for item in self.customerThread:
             item.start()

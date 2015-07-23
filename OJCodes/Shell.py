@@ -7,8 +7,8 @@ class Shell:
         self.__name = name
         self.__path = path
 
-    def getName(self):
+    def get_name(self):
         return self.__name
 
-    def getPath(self):
+    def get_path(self):
         return self.__path

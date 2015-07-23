@@ -10,14 +10,14 @@ from DockerRunner import DockerRunner
 
 
 class TimeSupervisor:
-    def __init__(self, containerID, timeLimit = 10):
-        self.__containerID = containerID
-        self.__timeLimit = timeLimit
+    def __init__(self, container_id, time_limit=10):
+        self.__containerID = container_id
+        self.__timeLimit = time_limit
         self.__isTimming = False
         self.__timeTotal = 0
         self.__thread = None
 
-    def reSet(self):
+    def reset(self):
         self.__timeTotal = 0
 
     def timming(self):
@@ -25,7 +25,7 @@ class TimeSupervisor:
             if self.__isTimming:
                 self.__timeTotal += 1
                 if self.__timeTotal > DATA.CONTAINER_LIFETIME:
-                    DockerRunner.removeContainer(self.__containerID)
+                    DockerRunner.remove_container(self.__containerID)
                     self.__isTimming = False
             time.sleep(1)
 
@@ -34,18 +34,18 @@ class TimeSupervisor:
 
     def start(self):
         self.__isTimming = True
-        if self.__thread == None:
+        if self.__thread is None:
             self.__thread = threading.Thread(target=self.timming)
             self.__thread.start()
 
-    def getContainerID(self):
+    def get_container_id(self):
         return self.__containerID
 
-    def setContainerID(self, containerID):
-        self.__containerID = containerID
+    def set_container_id(self, container_id):
+        self.__containerID = container_id
 
-    def getTimeLimit(self):
+    def get_time_limit(self):
         return self.__timeLimit
 
-    def setTimeLimit(self, timeLimit):
-        self.__timeLimit = timeLimit
+    def set_time_limit(self, time_limit):
+        self.__timeLimit = time_limit
