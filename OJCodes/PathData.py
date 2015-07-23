@@ -3,10 +3,10 @@ __author__ = 'xp'
 
 class DATA:
     # the path of codes, exes, shell, and error log file in docker
-    HOST_CODES_PATH = '/home/xp/codes'
-    HOST_EXES_PATH = '/home/xp/exes'
-    HOST_SHELL_PATH = '/home/xp/shellFiles'
-    HOST_ERROR_LOG_PATH = '/home/xp/ErrorLog'
+    HOST_CODES_PATH = '/home/codes'
+    HOST_EXES_PATH = '/home/exes'
+    HOST_SHELL_PATH = '/home/shellFiles'
+    HOST_ERROR_LOG_PATH = '/home/ErrorLog'
 
     # the path of codes, exes, and shell in docker
     DOCKER_CODES_PATH = '/home/codes'

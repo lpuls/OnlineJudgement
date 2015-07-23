@@ -16,7 +16,7 @@ class DataBaseLinker:
         @:argument 连接至服务器数据库
         @:param 无
         """
-        DataBaseLinker.__connect = MySQLdb.connect( host='localhost', port=3306, user='root', passwd='085850', db='XPOJ', charset="utf8")
+        DataBaseLinker.__connect = MySQLdb.connect( host='localhost', port=3306, user='root', passwd='SWE12037lpuls', db='XPOJ', charset="utf8")
 
     def otherLinker(self, host, port, user, passwd, db):
         """

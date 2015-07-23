@@ -19,13 +19,13 @@ class ShellCreater:
         # 生成编译的sh文件
         compileName = ''
         if compileType.upper() == 'C':
-            compileName = 'gcc ' + DATA.DOCKER_CODES_PATH + '/' + codeName  + '.c -o ' + DATA.DOCKER_EXES_PATH + '/' + exeName
+            compileName = 'gcc ' + DATA.DOCKER_CODES_PATH + '/' + codeName + '.c -o ' + DATA.DOCKER_EXES_PATH + '/' + exeName
         elif compileType.upper() == 'CPP':
             compileName = 'g++ ' + DATA.DOCKER_CODES_PATH + '/' + codeName + '.cpp -o ' + DATA.DOCKER_EXES_PATH + '/' + exeName
         elif compileType.upper() == 'JAVA':
             compileName = 'javac ' + DATA.DOCKER_CODES_PATH + '/' + codeName + '.java\n'
             compileName += 'mv ' + DATA.DOCKER_CODES_PATH + '/' + exeName + '.class ' + DATA.DOCKER_EXES_PATH
-        elif compileType.upper() == 'PYTHON':
+        elif compileType.upper() == 'PY':
             compileName = 'cp ' + DATA.DOCKER_CODES_PATH + '/' + codeName + '.py ' + DATA.DOCKER_EXES_PATH
         Log.CompileLOG('Compile: Get Compile Name')
         try:
@@ -50,6 +50,8 @@ class ShellCreater:
     @staticmethod
     def createRunShell(exeName, interpreter, question, param=[]):
         Log.CompileLOG('RUN: create run file')
+        scale = 1
+        suffix = ''
         interpreterValue = ''
         exeSentence = 'time ('
         if len(param) > 0:
@@ -59,12 +61,17 @@ class ShellCreater:
             exeSentence += ' | '
         if interpreter.upper() == 'C' or interpreter.upper() == 'CPP':
             interpreterValue = ''
-        elif interpreter.upper() == 'PYTHON':
+        elif interpreter.upper() == 'PY':
             interpreterValue = 'python'
+            scale = 3
+            suffix = '.py'
         elif interpreter.upper() == 'JAVA':
             interpreterValue = 'java'
+            scale = 2
+            suffix = '.java'
         Log.CompileLOG('RUN: Get interpreter value')
-        exeSentence += (interpreterValue + ' .' + DATA.DOCKER_EXES_PATH + '/' + exeName + ' )')
+        exeSentence += (interpreterValue + ' .' + DATA.DOCKER_EXES_PATH + '/' + exeName + suffix + ' )')
+        Log.CompileLOG('RUN: The Exesentence is : '+exeSentence)
         #生成编译的sh文件
         try:
             Log.CompileLOG('RUN: create file and write data')
@@ -72,7 +79,7 @@ class ShellCreater:
             Log.CompileLOG('RUN: ' + shell.getPath() + '/' + shell.getName())
             file = open(shell.getPath() + '/' + shell.getName(), "w")
             file.write('#! /bin/bash\n')
-            file.write('ulimit -s -t ' + str(question.getTime()) + '\n')
+            file.write('ulimit -s -t ' + str(question.getTime() * scale) + '\n')
             file.write(exeSentence + '\n')
             file.close()
             Log.CompileLOG('RUN: write data over')

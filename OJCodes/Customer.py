@@ -41,10 +41,10 @@ class Customer:
         self.__timeSupervisor.setContainerID(containerID=container)
 
         # run docker and get result of program which running
-        # self.__timeSupervisor.reSet()
-        # self.__timeSupervisor.start()
+        self.__timeSupervisor.reSet()
+        self.__timeSupervisor.start()
         result = DockerRunner.getInstance().execCommand(container=container, cmd='.' + DATA.DOCKER_SHELL_PATH + '/' + shell.getName())
-        # self.__timeSupervisor.stop()
+        self.__timeSupervisor.stop()
         # remove running container which running program
         Log.CustomerLOG('Remove Container')
         DockerRunner.getInstance().removeContainer(container=container)
@@ -71,6 +71,7 @@ class Customer:
                     testDatas = OJDBA.getTestDataByQuestionID(submit.getQuestionID())
                     testDatasLength = len(testDatas)
                     acceptTotal = 0
+                    runTimeTotal = 0
                     # judgement the program 5 times and the result is ac every, it can be update into data base
                     for i in range(0, DATA.JUDGEMENT_TIMES):
                         Log.CustomerLOG('CUSTOMER: ------------------------------------------------')
@@ -81,11 +82,14 @@ class Customer:
                         testDatasLength -= 1
                         # run the program and get the result
                         Log.CustomerLOG('CUSTOMER: Start......')
-                        result = self.runProgram(submit.getCodeName(), submit.getCodeName(), question, testData.getTestDataByList())
+                        result = self.runProgram(submit.getCodeName(), submit.getType(), question, testData.getTestDataByList())
+                        Log.CustomerLOG('CUSTOMER: the test data list' + str(testData.getResultDataByList()))
                         Log.CustomerLOG('CUSTOMER: \n' + result)
                         # access data base and update the submit result
                         if result is not None:
                             Log.CustomerLOG('CUSTOMER: Judgement......')
+                            runTime = AnalysisResult.analysisTime(result)
+                            runTimeTotal += float(runTime.replace('ms', ''))
                             analysisResult = AnalysisResult.analysis(result, testData.getResultDataByList())
                             Log.CustomerLOG('CUSTOMER: AnalysisResult is ' + analysisResult)
                             if analysisResult != DATA.ACCEPT:
@@ -98,7 +102,8 @@ class Customer:
                             OJDBA.updateRuntimeError(submit.getCodeName())
                     # if acceptTotal is 5, update data base the result is ac
                     if acceptTotal == 5:
-                        OJDBA.updateAccepted(submit.getCodeName())
+                        OJDBA.updateAccepted(codeName=submit.getCodeName(),
+                                             runTime=(str(runTimeTotal / DATA.JUDGEMENT_TIMES) + 'MS'))
                 else:
                     Log.CustomerLOG('CUSTOMER: Compile Error')
                     OJDBA.updateCompilerError(submit.getCodeName())

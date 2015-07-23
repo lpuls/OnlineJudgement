@@ -34,6 +34,13 @@ class OJDataBaseAdministrator:
         return result
 
     @staticmethod
+    def updataSubmitTime(runTime, codeName):
+        OJDataBaseAdministrator.waitMutex()
+        result = DataBaseLinker.getInstance().execute("update Submit set time='" + runTime + "' where codeName='" + codeName + "'")
+        OJDataBaseAdministrator.releaseMutex()
+        return result
+
+    @staticmethod
     def getQuestion(id):
         OJDataBaseAdministrator.waitMutex()
         result = DataBaseLinker.getInstance().execute("select * from Question where id='" + str(id) + "'")
@@ -103,8 +110,9 @@ class OJDataBaseAdministrator:
         return OJDataBaseAdministrator.updataSubmitRrsult('Presentation Error', codeName)
 
     @staticmethod
-    def updateAccepted(codeName):
-        return OJDataBaseAdministrator.updataSubmitRrsult('Accepted', codeName)
+    def updateAccepted(codeName, runTime='N/A'):
+        OJDataBaseAdministrator.updataSubmitTime(runTime, codeName)
+        OJDataBaseAdministrator.updataSubmitRrsult('Accepted', codeName)
 
     @staticmethod
     def addQuestion(question):
